@@ -5,3 +5,28 @@
 .modal-card{touch-action:pan-y;overscroll-behavior:contain}.modal-card *{touch-action:pan-y}
 @media(max-height:450px){h1{font-size:70px}.tagline{margin-top:14px}.title-card .secondary{padding:8px 12px}.title-bottom{margin-top:11px}}
 @media(max-height:350px){.title-card .intro{display:none}h1{font-size:60px;margin:13px 0}.tagline{margin:12px 0}.title-bottom>span{display:none}}
+
+/* Modal content may scroll; its heading and primary action stay on screen.
+   Ancestors must permit vertical panning for iOS to scroll the inner body. */
+html,body{touch-action:pan-y}
+#modal{padding:max(12px,env(safe-area-inset-top)) max(16px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(16px,env(safe-area-inset-left));touch-action:pan-y}
+#modal .modal-card{display:flex;flex-direction:column;max-height:100%;min-height:0;overflow:hidden;touch-action:pan-y}
+#modal-eyebrow,#modal-heading,#modal-actions{flex-shrink:0}
+#modal-body{min-height:0;overflow-y:auto;overscroll-behavior:contain;touch-action:pan-y;-webkit-overflow-scrolling:touch}
+#modal-actions{padding-top:12px;margin-top:10px;border-top:1px solid #ffffff18}
+#modal-actions button{min-height:44px;touch-action:manipulation}
+#modal.stage-clear .modal-card{width:720px;max-width:100%}
+.clear-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:0 0 12px;text-align:center}
+.clear-stats>span{font-size:10px;color:#a9bfbd;background:#ffffff05;border:1px solid #ffffff12;border-radius:7px;padding:7px}
+.clear-stats strong{display:block;font-size:17px;color:#f8e4b3}
+.upgrade-options{padding:0;margin:0;border:0;min-width:0}
+.upgrade-options legend{font-size:12px;margin-bottom:9px;color:#dbe3dc}
+.upgrade-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.upgrade-choice{display:flex;gap:8px;align-items:flex-start;padding:11px 9px;min-height:62px;border:1px solid #788e8c66;border-radius:8px;cursor:pointer;background:#10242e}
+.upgrade-choice:has(input:checked){border-color:#f8d680;background:#443d24}
+.upgrade-choice input{margin:4px 0 0;accent-color:#f8d680;flex-shrink:0;width:15px;height:15px}
+.upgrade-choice strong{font-size:12px;line-height:1.5;display:block}
+.upgrade-choice small{display:block;font-size:10px;line-height:1.5;color:#b8c9c6;margin-top:3px}
+#modal-body .clear-note{font-size:10px;color:#8fa9a6;margin:9px 0 0}
+@media(max-height:520px){#modal .modal-card{padding:16px 22px}#modal-heading{font-size:23px;margin:8px 0 10px}.clear-stats{margin-bottom:9px}.clear-stats>span{padding:4px}.clear-stats strong{font-size:15px}.upgrade-choice{min-height:55px;padding:8px}#modal-actions{padding-top:8px;margin-top:8px}}
+@media(max-width:520px){.upgrade-grid{grid-template-columns:1fr}.upgrade-choice{min-height:55px}}
