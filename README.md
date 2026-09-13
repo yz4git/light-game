@@ -6,7 +6,7 @@
 
 [GitHub Pagesで遊ぶ](https://yz4git.github.io/light-game/)
 
-iPhone Safariは横画面を推奨。PCブラウザでもプレイできます。ホーム画面への追加と、初回読み込み後のオフライン起動に対応しています。
+iPhone Safariは横画面を推奨。WebGLが無効な環境では同じゲームを軽量Canvas描画で起動します。PCブラウザでもプレイできます。ホーム画面への追加と、初回読み込み後のオフライン起動に対応しています。
 
 ## 操作
 
