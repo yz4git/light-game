@@ -1,1 +1,1 @@
-{"name":"light-game","version":"1.0.0","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs","test":"node --test tests/*.test.mjs","dev":"node scripts/serve.mjs"},"dependencies":{"three":"0.185.1"},"devDependencies":{"esbuild":"0.25.12"}}
+{"name":"light-game","version":"1.1.0","private":true,"type":"module","scripts":{"build":"node scripts/build.mjs","test":"node --test tests/*.test.mjs","dev":"node scripts/serve.mjs"},"dependencies":{"three":"0.185.1"},"devDependencies":{"esbuild":"0.25.12"}}

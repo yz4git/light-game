@@ -25,7 +25,7 @@ test('clear screen always provides a separate Next button with a default upgrade
   assert.equal(ui.screen[4], 'stage-clear');
   assert.match(ui.screen[2], /value="power" checked/);
   assert.equal(ui.screen[3].length, 1);
-  assert.match(ui.screen[3][0][0], /次のエリアへ（エリア 2）/);
+  assert.match(ui.screen[3][0][0], /次の階へ（2 \/ 999）/);
   ui.advance();
   const {next} = ui.result();
   assert.equal(next.status, 'playing');
@@ -34,7 +34,7 @@ test('clear screen always provides a separate Next button with a default upgrade
   assert.deepEqual(next.upgrades, ['power']);
 });
 
-test('selecting an upgrade advances to area 3 once and preserves earlier upgrades', () => {
+test('selecting an upgrade advances to floor 3 once and preserves earlier upgrades', () => {
   const upgrades = ['power'];
   const ui = openClear(1, upgrades, 'wide');
   assert.doesNotMatch(ui.screen[2], /value="power"/);
@@ -54,4 +54,22 @@ test('missing or stale selection cannot block Next', () => {
   const ui = openClear(1, ['power'], 'power');
   ui.advance();
   assert.deepEqual(ui.result().next.upgrades, ['power', 'range']);
+});
+
+
+test('all upgrades acquired still permits progression from floor 998 to 999', () => {
+  const upgrades = ['power', 'range', 'wide', 'battery', 'dash'];
+  const ui = openClear(997, upgrades, undefined);
+  assert.doesNotMatch(ui.screen[2], /<fieldset/);
+  assert.match(ui.screen[3][0][0], /999 \/ 999/);
+  ui.advance();
+  const {next} = ui.result();
+  assert.equal(next.stage, 998);
+  assert(next.isFinalFloor);
+  assert.deepEqual(next.upgrades, upgrades);
+});
+
+test('floor 999 is the ending and never offers a floor 1000', () => {
+  assert.throws(() => openClear(998, [], undefined), RangeError);
+  assert.throws(() => new Game(999), RangeError);
 });
