@@ -1,0 +1,38 @@
+name: Test and publish LIGHT GAME
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: light-game-pages
+  cancel-in-progress: false
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - name: Verify combat and progression
+        run: npm test
+      - name: Check committed production files
+        run: |
+          test -s docs/index.html
+          test -s docs/assets/game.js
+          test -s docs/style.css
+          node --check docs/assets/game.js
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: docs
+      - name: Publish game
+        id: deployment
+        uses: actions/deploy-pages@v4

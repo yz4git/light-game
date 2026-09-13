@@ -1,0 +1,8 @@
+export class Audio{
+ constructor(){this.enabled=false;this.ctx=null;this.time=0;this.step=0;}
+ start(){try{this.ctx||=new(window.AudioContext||window.webkitAudioContext)();this.ctx.resume().catch(()=>{});}catch{}}
+ toggle(){this.enabled=!this.enabled;if(this.enabled)this.start();return this.enabled;}
+ tone(f,d=.12,type='sine',gain=.08,end=f){if(!this.enabled||!this.ctx)return;const t=this.ctx.currentTime,o=this.ctx.createOscillator(),g=this.ctx.createGain();o.type=type;o.frequency.setValueAtTime(f,t);o.frequency.exponentialRampToValueAtTime(Math.max(20,end),t+d);g.gain.setValueAtTime(.001,t);g.gain.linearRampToValueAtTime(gain,t+.01);g.gain.exponentialRampToValueAtTime(.001,t+d);o.connect(g);g.connect(this.ctx.destination);o.start(t);o.stop(t+d+.02);}
+ play(type){if(type==='kill'){this.tone(580,.16,'triangle',.07,1100);this.tone(190,.1,'sine',.08,60);}else if(type==='hurt')this.tone(160,.24,'sawtooth',.045,50);else if(type==='dash')this.tone(450,.17,'triangle',.035,75);else if(['key','heal','cell','pickup'].includes(type)){this.tone(660,.18,'sine',.07,880);this.tone(1320,.35,'sine',.035,1760);}else if(type==='clear'){[440,554,659,880].forEach((f,i)=>this.tone(f,.6+i*.12,'triangle',.035));}else if(type==='windup')this.tone(95,.4,'sawtooth',.026,180);else if(type==='empty')this.tone(160,.15,'square',.025,90);}
+ tick(dt,active){if(!this.enabled||!active)return;this.time+=dt;if(this.time>1.2){this.time=0;const notes=[110,0,164.81,0,130.81,0,146.83,164.81];const n=notes[this.step++%notes.length];if(n)this.tone(n,.85,'sine',.016);}}
+}

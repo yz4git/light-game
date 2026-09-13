@@ -1,0 +1,10 @@
+import {build} from 'esbuild';
+import {mkdir,copyFile,writeFile,readFile} from 'node:fs/promises';
+import {createHash} from 'node:crypto';
+await mkdir('docs/assets',{recursive:true});
+await build({entryPoints:['src/main.js'],bundle:true,minify:true,format:'esm',target:['safari16'],outfile:'docs/assets/game.js',legalComments:'eof'});
+for(const name of ['index.html','style.css','manifest.webmanifest','icon.svg']) await copyFile('src/'+name,'docs/'+name);
+const hash=createHash('sha256').update(await readFile('docs/assets/game.js')).update(await readFile('docs/style.css')).update(await readFile('docs/index.html')).digest('hex').slice(0,12);
+await writeFile('docs/sw.js',`const CACHE='light-game-${hash}';const FILES=['./','./index.html','./style.css','./assets/game.js','./icon.svg','./manifest.webmanifest'];self.addEventListener('install',e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(FILES)).then(()=>self.skipWaiting())));self.addEventListener('activate',e=>e.waitUntil(caches.keys().then(ks=>Promise.all(ks.filter(k=>k.startsWith('light-game-')&&k!==CACHE).map(k=>caches.delete(k)))).then(()=>self.clients.claim())));self.addEventListener('fetch',e=>{if(e.request.method!=='GET'||new URL(e.request.url).origin!==location.origin)return;e.respondWith(fetch(e.request).then(r=>{if(r.ok){const copy=r.clone();caches.open(CACHE).then(c=>c.put(e.request,copy)).catch(()=>{});}return r;}).catch(()=>caches.match(e.request).then(r=>r||(e.request.mode==='navigate'?caches.match('./index.html'):Response.error()))));});`);
+await writeFile('docs/.nojekyll','');
+console.log('Built LIGHT GAME '+hash);
