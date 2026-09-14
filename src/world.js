@@ -1,16 +1,10 @@
+import {THEMES} from './environment.js';
 import {rng,blocked,distance} from './geometry.js';
 
 export const MAX_FLOORS = 999;
-export const CAMERA_ZOOM = 1.5;
+export const CAMERA_ZOOM = 2.25;
 export const DEFAULT_RUN_SEED = 740129;
 const W = 39, H = 43;
-const THEMES = [
-  {name:'廃校の迷宮',sub:'THE LOST SCHOOL',floor:'#424c45',wall:'#414e51',cap:'#687775',room:'#555344'},
-  {name:'忘れられた倉庫',sub:'THE FORGOTTEN DEPOT',floor:'#404b50',wall:'#3b4851',cap:'#657985',room:'#485761'},
-  {name:'蔦に覆われた中庭',sub:'THE OVERGROWN COURT',floor:'#364c41',wall:'#3d5147',cap:'#687d65',room:'#405b48'},
-  {name:'沈黙の機械室',sub:'THE SILENT WORKS',floor:'#454345',wall:'#514c48',cap:'#807363',room:'#5a514b'},
-  {name:'夜明けの回廊',sub:'THE LAST CORRIDORS',floor:'#3f4553',wall:'#444957',cap:'#73768d',room:'#4b5062'},
-];
 const point = index => ({x:index % W - 19,z:Math.floor(index / W) - 21});
 
 function flood(mask, start) {
@@ -128,5 +122,6 @@ export function generateFloor(stage, runSeed=DEFAULT_RUN_SEED) {
     pickups.push({...p,type:pickups.length%2?'heal':'cell'});if(pickups.length===3)break;
   }
   const theme=THEMES[stage%THEMES.length];
+  for(const prop of props)prop.visual=prop.kind==='car'?theme.largeProp:theme.prop;
   return {seed,floor:stage+1,name:theme.name,sub:theme.sub,theme,count:spawns.length,start,key,exit,rooms,corridors,tiles,spawns,pickups,obstacles:[...walls,...props],lamps:rooms.map(room=>({x:room.cx-19,z:room.cz-21-1.7}))};
 }
